@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,20 +16,38 @@ public class conversation {
 	// DONE
 	public static String CountConversation = """
 		    SELECT COUNT(*) AS conversation_count
-		    FROM conversation
+		    FROM conversations
 		    """;
 	
 	public static String conversationDetail =  """
-		    SELECT id, name, description, created_at
-		    FROM conversation
-		    ORDER BY created_at DESC
-		    """;
+		    SELECT
+	        c.id,
+	        c.name,
+	        c.description,
+	        c.created_at,
+	        COUNT(cu.user_id) AS user_count
+	    FROM conversations c
+	    LEFT JOIN conversation_user cu
+	        ON c.id = cu.conversation_id
+	    GROUP BY
+	        c.id,
+	        c.name,
+	        c.description,
+	        c.created_at
+	    ORDER BY c.created_at DESC
+	    """;
+			
+//			"""
+//		    SELECT id, name, description, created_at
+//		    FROM conversation
+//		    ORDER BY created_at DESC
+//		    """;
 	
 	public static String allconversationNameForUser= """
 		    SELECT
 	        c.id,
 	        c.name,
-	    FROM conversation c
+	    FROM conversations c
 	    JOIN conversation_user cu
 	        ON c.id = cu.conversation_id
 	    WHERE cu.user_id = ?
@@ -82,10 +101,14 @@ public class conversation {
 	
 	public int conversationCount () {
 		try (Connection connection = DBConnection.getConnection()){
-            PreparedStatement statement = connection.prepareStatement(CountConversation);
+            Statement statement = connection.createStatement();
             
-           ResultSet result = statement.executeQuery();
-           return result.getInt("conversation_count");
+           ResultSet result = statement.executeQuery(CountConversation);
+           int Count = 0 ;
+           if (result.next()) {
+        	     Count = result.getInt("conversation_count");
+        	}
+           return Count;
 
        } catch (SQLException e) {
            e.printStackTrace();
@@ -109,8 +132,9 @@ public class conversation {
 				
 				C.setId(result.getLong("ids"));
 				C.setName(result.getString("name"));
-				C.setDiscrapton(result.getString("discraption"));
+				C.setDiscraption(result.getString("discraption"));
 				C.setCreated_at("created_at");
+				C.setUsercount(result.getInt("user_count"));
 				convesartionsData.add(C);
 				
 			}

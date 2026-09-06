@@ -62,13 +62,13 @@ public class register_servlet extends HttpServlet {
 		
 		 if(createduser !=null )
 		 {
-			 Cookie cookie = new Cookie("JWT",createduser.getToken() );
+			 Cookie cookie = new Cookie("JWT",createduser.getToken());
 			 cookie.setHttpOnly(true);
 			 response.addCookie(cookie);
 			
 		
 				 
-			 response.sendRedirect("home.jsp");
+			 response.sendRedirect("Home_servlet");
 			
 	
 			 

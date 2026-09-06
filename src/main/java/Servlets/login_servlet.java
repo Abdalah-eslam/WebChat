@@ -51,7 +51,7 @@ public class login_servlet extends HttpServlet {
 			 Cookie cookie = new Cookie("JWT",CarrantUser.getToken() );
 			 cookie.setHttpOnly(true);
 				response.addCookie(cookie);
-			 response.sendRedirect("home.jsp");
+			 response.sendRedirect("Home_servlet");
 	
 		 }
 		

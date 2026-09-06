@@ -33,7 +33,6 @@ public class Auth_Service implements IAuth_Service {
     		
     		String jwt =JWT.GenrateJwt(userdto.getUsername(), userdto.getId(), "user" );
     		userdto.setToken(jwt); 
-    		System.out.println("JWT ----------> "+jwt);
     		return userdto;
 			
 		
@@ -70,10 +69,11 @@ public class Auth_Service implements IAuth_Service {
 		user.setPassword(hashedPassword);
 		
 		if ( userDAO.SaveUser(user)) {
+		User createdUser	=userDAO.FindByEmail(user.getEmail());
 			Userdto userdto = new Userdto();
 		userdto.setrole("user");
-		userdto.setUsername(user.getUsername());
-		userdto.setId(user.getID());
+		userdto.setUsername(createdUser.getUsername());
+		userdto.setId(createdUser.getID());
 		String jwt =JWT.GenrateJwt(userdto.getUsername(),userdto.getId(), "user");
 		userdto.setToken(jwt);
 		

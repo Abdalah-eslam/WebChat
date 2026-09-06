@@ -30,8 +30,6 @@ public class AuthFilter implements Filter{
 		
 		 String uri = req.getRequestURI();
 
-	        System.out.println("Auth Filter: " + uri);
-
 	       
 	        if (uri.endsWith("/login.jsp")
 	                || uri.endsWith("/register.jsp")
