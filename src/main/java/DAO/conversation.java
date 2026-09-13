@@ -44,17 +44,6 @@ public class conversation {
 		    VALUES (?, ? , ? , ?)
 		    """;
 	
-	public static String allconversationNameForUser= """
-		    SELECT
-	        c.id,
-	        c.name,
-	    FROM conversations c
-	    JOIN conversation_user cu
-	        ON c.id = cu.conversation_id
-	    WHERE cu.user_id = ?
-	    ORDER BY c.created_at DESC
-	    """;
-	
 	public static String addUserForConversation = """
 		    INSERT INTO conversation_user
 	        (conversation_id, user_id)
@@ -64,39 +53,13 @@ public class conversation {
 	        conversation_id = conversation_id
 	    """;
 	
-	public static String getmassagesForConversation= """
-		    SELECT
-	        id,
-	        content,
-	        created_at,
-	        sender_id,
-	        conversation_id
-	    FROM message
-	    WHERE conversation_id = ?
-	    ORDER BY created_at ASC
-	    """;
-	
-	public static String AddmassageToconversation = """
-		    INSERT INTO message
-	        (content, created_at, sender_id, conversation_id)
-	    VALUES
-	        (?, ?, ?, ?)
-	    """;
-	
-	public static String getmassagesForConversationWithSenderName = """
-		    SELECT
-	        m.id,
-	        m.content,
-	        m.created_at,
-	        m.sender_id,
-	        m.conversation_id,
-	        u.username
-	    FROM message m
-	    JOIN user u
-	        ON m.sender_id = u.id
-	    WHERE m.conversation_id = ?
-	    ORDER BY m.created_at ASC
-	    """;
+	public static String getConverastionDatabyid ="""
+			
+			SELECT c.name, c.created_By, c.isPublic, c.created_at, COUNT(cu.user_id) AS usercount 
+			FROM conversations c
+			 LEFT JOIN conversation_user cu ON c.id = cu.conversation_id 
+			WHERE c.id = ? GROUP BY 
+			c.id, c.name, c.created_By, c.isPublic, c.created_at """;
 	
 	public boolean createConversation (ConvesartionData data) {
 		
@@ -150,7 +113,7 @@ public class conversation {
 			while (result.next()) {
 				
 				ConvesartionData C = new ConvesartionData();
-				
+				System.out.println("UserCounter for Conversation"+result.getString("name")+"count is "+result.getInt("user_count"));
 				C.setId(result.getLong("id"));
 				C.setName(result.getString("name"));
 				C.setDescription(result.getString("description"));
@@ -168,14 +131,14 @@ public class conversation {
 		}
 	}
 	
-	public boolean addUserToConversation (int conversationId , int userID) {
+	public boolean addUserToConversation (Long conversationId , Long userId) {
 		
 		try (Connection connection = DBConnection.getConnection()){
             PreparedStatement statement = connection.prepareStatement(addUserForConversation);
             
             
             statement.setLong(1, conversationId);
-            statement.setLong(2, userID);
+            statement.setLong(2, userId);
             
            int AddRow= statement.executeUpdate();
            
@@ -189,7 +152,38 @@ public class conversation {
 		
 		
 		
+	};
+	
+	
+public ConvesartionData getConversationdataByid(Long ConversationId) {
+		
+		try (Connection connection = DBConnection.getConnection()){
+            PreparedStatement statement = connection.prepareStatement(getConverastionDatabyid);
+            
+            
+            statement.setLong(1, ConversationId);
+            
+            ResultSet rs = statement.executeQuery();
+            
+            ConvesartionData conversationData =new ConvesartionData();
+          while (rs.next()) {
+		
+            conversationData.setName(rs.getString("name"));
+            conversationData.setCreated_by(rs.getInt("created_By"));
+            conversationData.setPublic(rs.getBoolean("isPublic"));
+            conversationData.setCreated_at(rs.getString("created_at"));
+            conversationData.setUsercount(rs.getInt("usercount"));
+          }
+            return conversationData;
+          
+		
 	}
-	
-	
+		catch (Exception e) {
+			e.printStackTrace();
+	           return null;
+		}
+		
+			
+		
+}
 }

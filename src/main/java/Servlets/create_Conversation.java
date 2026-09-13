@@ -50,6 +50,7 @@ public class create_Conversation extends HttpServlet {
 		boolean iscreated= conversation_service.createConversation(data);
 		
 		if (iscreated) {
+			conversation_service.addUserforconversation(data.getId(),(long)data.getCreated_by());
 			request.getRequestDispatcher("chat.jsp").forward(request, response);
 			
 			return;

@@ -14,6 +14,7 @@ import java.util.List;
 import DAO.conversation;
 import DTO.ConvesartionData;
 import DTO.massagedto;
+import Services.Conversation.Conversation_service;
 import Services.massage.Imassage;
 import Services.massage.massage;
 import io.jsonwebtoken.Claims;
@@ -25,11 +26,12 @@ public class chat extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
-	
+	private Conversation_service conversation_service ;
 	private Imassage massageservice ; 
     public chat() {
         super();
         this.massageservice = new massage();
+        conversation_service = new Conversation_service();
         // TODO Auto-generated constructor stub
     }
 
@@ -40,20 +42,19 @@ public class chat extends HttpServlet {
 			 String conversationID= request.getParameter("chatId");
 			 String username=(String) request.getSession().getAttribute("username");
 			int userid=(int)request.getSession().getAttribute("id");
-			request.getSession().setAttribute("chatId", conversationID);
-		
-		List<ConvesartionData> conversations =
-	            (List<ConvesartionData>) request.getAttribute("ConversationData");
+			
+			conversation_service.addUserforconversation(Long.parseLong(conversationID),(long)userid);
 		
 			ArrayList<massagedto> massages= massageservice.getMassagebyCoversation(conversationID);
+			ConvesartionData convesartionData = conversation_service.getConversationdataByid(Long.parseLong(conversationID));
 			
-			System.out.println("chatid---->"+conversationID+"username--->"+username+"userId--->"+userid);
 	
 			 
 			
 			
-			
+			request.setAttribute("ConversationData", convesartionData);
 			request.setAttribute("massages", massages);
+			System.out.println("chatid---->"+conversationID+"username--->"+username+"userId--->"+userid+"from conversation data its name is "+convesartionData.getName());
 		    request.getRequestDispatcher("chat.jsp").forward(request, response);
 	}
 

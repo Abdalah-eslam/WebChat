@@ -1320,7 +1320,7 @@
 					        <div class="empty-state">
 					
 					            <h3>No conversations yet</h3>
-					
+					ء
 					            <p>
 					                There are no public conversations available.
 					                Create the first one and start chatting.

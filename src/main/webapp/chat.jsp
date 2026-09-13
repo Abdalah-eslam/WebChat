@@ -4,6 +4,8 @@
 <%@ page import="java.util.List" %>
 <%@ page import="DTO.massagedto" %>
 <%@ page import="DTO.Userdto" %>
+<%@ page import="DTO.ConvesartionData" %>
+
 
 <!DOCTYPE html>
 
@@ -944,12 +946,11 @@
     }
 
 
-    String conversationName =
-            (String) request.getAttribute("ConversationName");
+    ConvesartionData conversationdata =
+    		(ConvesartionData) request.getAttribute("ConversationData");
 
 
-    Integer counter =
-            (Integer) request.getAttribute("Counter");
+   
 
 
     ArrayList<massagedto> massages =
@@ -989,12 +990,11 @@
 
                     <%
 
-                        if (conversationName != null &&
-                            !conversationName.isEmpty()) {
+                        if (conversationdata != null) {
 
                     %>
 
-                        <%= conversationName
+                        <%= conversationdata.getName()
                                 .substring(0, 1)
                                 .toUpperCase() %>
 
@@ -1019,8 +1019,8 @@
 
                     <h2>
 
-                        <%= conversationName != null
-                                ? conversationName
+                        <%= conversationdata.getName() != null
+                                ? conversationdata.getName()
                                 : "Conversation" %>
 
                     </h2>
@@ -1028,8 +1028,8 @@
 
                     <span>
 
-                        <%= counter != null
-                                ? counter
+                        <%= conversationdata.getUsercount() > 0
+                                ? conversationdata.getUsercount()
                                 : 0 %> members
 
                     </span>
@@ -1307,8 +1307,8 @@
 
             <span class="members-count">
 
-                <%= counter != null
-                        ? counter
+                <%= conversationdata.getUsercount() > 0
+                        ? conversationdata.getUsercount()
                         : 0 %>
 
             </span>

@@ -36,6 +36,17 @@ public class Conversation_service implements IConversation {
 	boolean isCreated=conversation.createConversation(data);
 	return isCreated;
 				}
+
+	@Override
+	public void addUserforconversation(Long conversationId , Long userId) {
+		conversation.addUserToConversation(conversationId,userId);
+		
+	}
+
+	@Override
+	public ConvesartionData getConversationdataByid(Long ConversationId) {
+		return conversation.getConversationdataByid(ConversationId);
+	}
 				
 				
 				
