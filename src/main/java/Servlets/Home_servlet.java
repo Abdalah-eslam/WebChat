@@ -37,8 +37,12 @@ public class Home_servlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int Count =conversationService.getCount();
 		
+		System.out.println("Count is --->"+Count);
+		
 		List<ConvesartionData> convesartionDatas = conversationService.getConvesartionData();
 		
+		System.out.println("ConversationData is --->"+convesartionDatas.get(0).getName());
+
 		String token = null;
 
 		Cookie[] cookies = request.getCookies();
@@ -53,9 +57,7 @@ public class Home_servlet extends HttpServlet {
 		        }
 		    }
 		}
-		
-		System.out.println("from homeServlet JWT is ---->"+token);
-		
+				
 	Claims cliams =	JWT.validateToken(token);
 		request.getSession().setAttribute("username", cliams.getSubject());
 		request.getSession().setAttribute("id", cliams.get("id"));

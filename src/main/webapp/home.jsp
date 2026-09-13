@@ -1,3 +1,4 @@
+<%@page import="Models.Conversation"%>
 <%@ page language="java"
     contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" %>
@@ -1261,77 +1262,75 @@
                      Conversations
                      ========================= -->
 
-                <%
-
-                    if (count != null
-                            && count > 0
-                            && conversations != null) {
-
-                        for (ConvesartionData conversation : conversations) {
-
-                %>
-
-
-                    <a
-                        href="chat?chatId=<%= conversation.getId() %>"
-                        class="chat-card">
-
-
-                        <div class="chat-top">
-
-                            <div class="chat-icon">
-                                #
-                            </div>
-
-                            <span class="arrow">
-                                →
-                            </span>
-
-                        </div>
-
-
-                        <h3 class="chat-name">
-
-                            <%= conversation.getName() %>
-
-                        </h3>
-
-
-                        <p class="chat-description">
-
-                            <%= conversation.getDiscraption() %>
-
-                        </p>
-
-
-                        <div class="chat-bottom">
-
-                            <span class="members">
-
-                                <%= conversation.getUsercount() %>
-
-                                members
-
-                            </span>
-
-
-                            <span class="public-label">
-                                Public
-                            </span>
-
-                        </div>
-
-
-                    </a>
-
-
-                <%
-
-                        }
-
-                    } else {
-
-                %>
+					               <%
+					    if (conversations != null && !conversations.isEmpty()) {
+					
+					        for (ConvesartionData conversation : conversations) {
+					        
+					%>
+					
+					            <a href="chat?chatId=<%= conversation.getId() %>"
+					               class="chat-card">
+					
+					                <div class="chat-top">
+					
+					                    <div class="chat-icon">
+					                        #
+					                    </div>
+					
+					                    <span class="arrow">
+					                        →
+					                    </span>
+					
+					                </div>
+					
+					                <h3 class="chat-name">
+					                    <%=
+					                    conversation.getName()
+					                    %>
+					                </h3>
+					
+					                <p class="chat-description">
+					                    <%= conversation.getDescription() %>
+					                </p>
+					
+					                <div class="chat-bottom">
+					
+					                    <span class="members">
+					                        <%= conversation.getUsercount() %> members
+					                    </span>
+					
+					                    <span class="public-label">
+					                        Public
+					                    </span>
+					                </div>
+					
+					            </a>
+					            
+					            
+					
+					<%
+					
+					
+					        }
+					
+					    } else {
+					%>
+					
+					        <div class="empty-state">
+					
+					            <h3>No conversations yet</h3>
+					
+					            <p>
+					                There are no public conversations available.
+					                Create the first one and start chatting.
+					            </p>
+					
+					        </div>
+					
+					<%
+					    }
+					%>
 
 
                     <!-- Empty State -->
@@ -1350,13 +1349,6 @@
                         </p>
 
                     </div>
-
-
-                <%
-
-                    }
-
-                %>
 
 
             </div>
@@ -1425,7 +1417,7 @@
             <!-- Form -->
 
             <form
-                action="create-conversation"
+                action="create_Conversation"
                 method="post">
 
 

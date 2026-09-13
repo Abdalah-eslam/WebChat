@@ -4,7 +4,7 @@
     String error = (String) request.getAttribute("error");
     String prevUsername = request.getParameter("username");
     String prevEmail = request.getParameter("email");
-    if (prevUsername == null) prevUsername = "";
+    if (prevUsername == null) prevUsername = 	"";
     if (prevEmail == null) prevEmail = "";
 %>
 <!DOCTYPE html>

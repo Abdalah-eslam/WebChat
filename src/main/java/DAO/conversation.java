@@ -37,11 +37,12 @@ public class conversation {
 	    ORDER BY c.created_at DESC
 	    """;
 			
-//			"""
-//		    SELECT id, name, description, created_at
-//		    FROM conversation
-//		    ORDER BY created_at DESC
-//		    """;
+	
+	public static String createConversation =  """
+		    INSERT INTO conversations
+		    (name, description, created_by , isPublic)
+		    VALUES (?, ? , ? , ?)
+		    """;
 	
 	public static String allconversationNameForUser= """
 		    SELECT
@@ -82,7 +83,7 @@ public class conversation {
 	        (?, ?, ?, ?)
 	    """;
 	
-	public static String getmassagesForConversationWithSenderNameString = """
+	public static String getmassagesForConversationWithSenderName = """
 		    SELECT
 	        m.id,
 	        m.content,
@@ -97,7 +98,27 @@ public class conversation {
 	    ORDER BY m.created_at ASC
 	    """;
 	
-	
+	public boolean createConversation (ConvesartionData data) {
+		
+		try (Connection connection = DBConnection.getConnection()){
+            PreparedStatement statement = connection.prepareStatement(createConversation);
+            
+            statement.setString(1, data.getName());
+            statement.setString(2, data.getDescription());
+            statement.setInt(3, data.getCreated_by());
+            statement.setBoolean(4, data.isPublic());
+            
+           int rows = statement.executeUpdate();
+           if (rows > 0 ) {
+        	   return true;
+           }
+           return false;
+
+       } catch (SQLException e) {
+           e.printStackTrace();
+           return false;
+       }
+	}
 	
 	public int conversationCount () {
 		try (Connection connection = DBConnection.getConnection()){
@@ -130,10 +151,10 @@ public class conversation {
 				
 				ConvesartionData C = new ConvesartionData();
 				
-				C.setId(result.getLong("ids"));
+				C.setId(result.getLong("id"));
 				C.setName(result.getString("name"));
-				C.setDiscraption(result.getString("discraption"));
-				C.setCreated_at("created_at");
+				C.setDescription(result.getString("description"));
+				C.setCreated_at(result.getString("created_at"));
 				C.setUsercount(result.getInt("user_count"));
 				convesartionsData.add(C);
 				

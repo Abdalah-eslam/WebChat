@@ -32,6 +32,11 @@ public class Conversation_service implements IConversation {
 		
 	}
 	
-	
-	
+	public boolean createConversation(ConvesartionData data) {
+	boolean isCreated=conversation.createConversation(data);
+	return isCreated;
+				}
+				
+				
+				
 }
