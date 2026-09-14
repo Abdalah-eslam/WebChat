@@ -44,17 +44,12 @@ public class chat extends HttpServlet {
 			int userid=(int)request.getSession().getAttribute("id");
 			
 			conversation_service.addUserforconversation(Long.parseLong(conversationID),(long)userid);
-		
 			ArrayList<massagedto> massages= massageservice.getMassagebyCoversation(conversationID);
 			ConvesartionData convesartionData = conversation_service.getConversationdataByid(Long.parseLong(conversationID));
 			
-	
-			 
-			
-			
 			request.setAttribute("ConversationData", convesartionData);
 			request.setAttribute("massages", massages);
-			System.out.println("chatid---->"+conversationID+"username--->"+username+"userId--->"+userid+"from conversation data its name is "+convesartionData.getName());
+		
 		    request.getRequestDispatcher("chat.jsp").forward(request, response);
 	}
 

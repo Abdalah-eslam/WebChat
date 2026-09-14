@@ -47,6 +47,9 @@ public class deletemassage extends HttpServlet {
         	    ((Integer) request.getSession().getAttribute("id")).longValue();
 		massageservice.deleteMassage(Long.parseLong(massageId), userId);
 		
+		
+		response.sendRedirect("chat?chatId="+conversationId);
+		
 	}
 
 }

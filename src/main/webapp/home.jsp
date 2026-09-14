@@ -1330,27 +1330,7 @@
 					
 					<%
 					    }
-					%>
-
-
-                    <!-- Empty State -->
-
-                    <div class="empty-state">
-
-                        <h3>
-                            No conversations yet
-                        </h3>
-
-                        <p>
-
-                            There are no public conversations available.
-                            Create the first one and start chatting.
-
-                        </p>
-
-                    </div>
-
-
+					%>	
             </div>
 
         </section>

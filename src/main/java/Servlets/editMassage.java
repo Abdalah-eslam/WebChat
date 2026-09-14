@@ -52,6 +52,8 @@ public class editMassage extends HttpServlet {
         	    ((Integer) request.getSession().getAttribute("id")).longValue();
 		massageservice.editMassage(Long.parseLong(massageId) , userId ,content);
 		
+		response.sendRedirect("chat?chatId="+conversationId);
+		
 	}
 
 }

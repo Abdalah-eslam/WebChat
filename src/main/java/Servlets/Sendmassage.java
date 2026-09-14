@@ -46,11 +46,11 @@ public class Sendmassage extends HttpServlet {
 		Integer id = (Integer) request.getSession().getAttribute("id");
 		massage.setSenderId(id.longValue());
 		massage.setContent(request.getParameter("content"));
-		massage.setConversationId(Long.parseLong((String)request.getSession().getAttribute("chatId")));
+		massage.setConversationId(Long.parseLong((String)request.getParameter("conversationId")));
 		
 		massageservice.addMassage(massage);
 		
-		response.sendRedirect("chat.jsp");
+		response.sendRedirect("chat?chatId="+(String)request.getParameter("conversationId"));
 		
 		
 		
