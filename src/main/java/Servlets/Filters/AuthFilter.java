@@ -1,7 +1,6 @@
 package Servlets.Filters;
 
 import java.io.IOException;
-import java.net.http.HttpRequest;
 
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.Filter;
@@ -14,72 +13,96 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import utils.JWT;
-@WebFilter(urlPatterns = {
-		"/login.jsp",
-		"/register.jsp"
-})
-public class AuthFilter implements Filter{
 
-	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-			throws IOException, ServletException {
-		
+@WebFilter("/*")
+public class AuthFilter implements Filter {
 
-        HttpServletRequest req = (HttpServletRequest) request;
-        HttpServletResponse res = (HttpServletResponse) response;
-		
-		 String uri = req.getRequestURI();
+    @Override
+    public void doFilter(
+            ServletRequest request,
+            ServletResponse response,
+            FilterChain chain)
+            throws IOException, ServletException {
 
-	       
-	        if (uri.endsWith("/login.jsp")
-	                || uri.endsWith("/register.jsp")
-	                || uri.endsWith("/LoginServlet")
-	                || uri.endsWith("/RegisterServlet")) {
+        HttpServletRequest req =
+                (HttpServletRequest) request;
 
-	            chain.doFilter(request, response);
-	            return;
-	        }
+        HttpServletResponse res =
+                (HttpServletResponse) response;
 
-	        // Get JWT from Cookie
-	        Cookie[] cookies = req.getCookies();
+        String uri = req.getRequestURI();
 
-	        String jwt = null;
+        System.out.println("Request URI: " + uri);
 
-	        if (cookies != null) {
+        // Public pages / endpoints
+        if (uri.endsWith("/login.jsp")
+                || uri.endsWith("/register.jsp")
+                || uri.endsWith("/login")
+                || uri.endsWith("/register")) {
 
-	            for (Cookie cookie : cookies) {
+            chain.doFilter(request, response);
+            return;
+        }
 
-	                if ("JWT".equals(cookie.getName())) {
-	                    jwt = cookie.getValue();
-	                    break;
-	                }
-	            }
-	        }
+        // Get JWT from Cookie
+        Cookie[] cookies = req.getCookies();
 
-	        // No JWT
-	        if (jwt == null) {
-	            res.sendRedirect("login.jsp");
-	            return;
-	        }
+        String jwt = null;
 
-	        // Validate JWT
-	        try {
+        if (cookies != null) {
 
-	            Claims claims = JWT.validateToken(jwt);
+            for (Cookie cookie : cookies) {
 
-	            System.out.println("JWT is valid");
+                if ("JWT".equals(cookie.getName())) {
 
-	            req.getSession().setAttribute("JWT", jwt);
+                    jwt = cookie.getValue();
 
-	            chain.doFilter(request, response);
-	            return;
+                    break;
+                }
+            }
+        }
 
-	        } catch (Exception e) {
+        System.out.println("JWT from cookie: " + jwt);
 
-	            // JWT invalid / expired
-	            res.sendRedirect("login.jsp");
-	            return;
-	        }
-	    }		    
-		
-	}
+        // No JWT
+        if (jwt == null || jwt.isEmpty()) {
+
+            res.sendRedirect(
+                    req.getContextPath() + "/login.jsp"
+            );
+
+            return;
+        }
+
+        // Validate JWT
+        try {
+
+            Claims claims =
+                    JWT.validateToken(jwt);
+
+            if (claims == null) {
+
+                res.sendRedirect(
+                        req.getContextPath() + "/login.jsp"
+                );
+
+                return;
+            }
+
+            System.out.println("JWT is valid");
+
+            chain.doFilter(request, response);
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "JWT validation failed: "
+                    + e.getMessage()
+            );
+
+            res.sendRedirect(
+                    req.getContextPath() + "/login.jsp"
+            );
+        }
+    }
+}

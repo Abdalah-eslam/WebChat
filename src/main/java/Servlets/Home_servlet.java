@@ -9,7 +9,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import utils.JWT;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import DTO.ConvesartionData;
@@ -59,11 +58,14 @@ public class Home_servlet extends HttpServlet {
 		}
 				
 	Claims cliams =	JWT.validateToken(token);
+
 		request.getSession().setAttribute("username", cliams.getSubject());
 		request.getSession().setAttribute("id", cliams.get("id"));
 		request.setAttribute("Counter", Count);
 		request.setAttribute("ConversationData", convesartionDatas);
 		request.getRequestDispatcher("home.jsp").forward(request, response);
+	
+	
 	}
 
 	/**

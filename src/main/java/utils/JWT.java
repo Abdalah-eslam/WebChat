@@ -31,6 +31,11 @@ public class JWT {
 	}
 	
 	public static Claims validateToken(String token) {
+		if (token == null || token.isEmpty())
+		{
+			return null;
+		}
+		
         return Jwts.parser()
                 .verifyWith(SECRET_KEY)
                 .build()

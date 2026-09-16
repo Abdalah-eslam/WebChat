@@ -43,25 +43,37 @@ public class login_servlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String email=request.getParameter("email").toString();
-		String password = request.getParameter("password").toString();
-		Userdto CarrantUser= authService.login(email,password);
-		
-		 if(CarrantUser !=null )
-		 {
-			 Cookie cookie = new Cookie("JWT",CarrantUser.getToken() );
-			 cookie.setHttpOnly(true);
-				response.addCookie(cookie);
-			 response.sendRedirect("Home_servlet");
-	
-		 }
-		
-			 else {
-				 request.setAttribute("error","Registration failed. Please try again.");
-				 RequestDispatcher reqDis= request.getRequestDispatcher("login.jsp");
-					reqDis.forward(request, response);
-				
-			 }
+	    String password = request.getParameter("password");
 
+	    Userdto currentUser =
+	            authService.login(email, password);
+
+	    if (currentUser != null) {
+
+	        Cookie cookie =
+	                new Cookie("JWT", currentUser.getToken());
+
+	        cookie.setHttpOnly(true);
+	        cookie.setPath("/");
+
+	        response.addCookie(cookie);
+
+	        response.sendRedirect(
+	                request.getContextPath() + "/Home_servlet"
+	        );
+
+	    } else {
+
+	        request.setAttribute(
+	                "error",
+	                "Login failed. Please try again."
+	        );
+
+	        RequestDispatcher reqDis =
+	                request.getRequestDispatcher("login.jsp");
+
+	        reqDis.forward(request, response);
+	    }
 	}
 
 }
